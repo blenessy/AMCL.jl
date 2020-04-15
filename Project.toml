@@ -1,0 +1,13 @@
+name = "AMCL"
+uuid = "77965072-693f-46ac-993e-134b582e13c3"
+authors = ["Zalan Blenessy <zalan.blenessy@gmail.com>"]
+version = "0.1.0"
+
+[deps]
+AMCL_jll = "3d240a5b-71e6-5479-a1fd-1de0b877801d"
+
+[extras]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = ["Test"]
