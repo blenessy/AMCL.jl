@@ -15,34 +15,30 @@ using AMCL: octet
     @test octet([1]).len == sizeof(Int) && octet([1]).max == sizeof(Int) && octet([1]).val != C_NULL && reduce(|, octet([1]).data) == 0x1
 end
 
-@testset "csprng" begin
-    @test AMCL.csprng("insecure") isa AMCL.csprng
+@testset "csprng memory alignment" begin
+    @test AMCL.csprng(octet("insecure")) isa AMCL.csprng
 end
 
-@testset "BLS_BLS381_KEY_PAIR_GENERATE" begin
-    sk, pk = octet(AMCL.BGS_BLS381), octet(4*AMCL.BFS_BLS381)
-    @test AMCL.BLS_BLS381_KEY_PAIR_GENERATE(AMCL.csprng("insecure"), sk, pk) == AMCL.BLS_OK
-    @test AMCL.BLS_BLS381_KEY_PAIR_GENERATE(C_NULL, sk, pk) == AMCL.BLS_OK
+@testset "amcl_aes memory alignment" begin
+    key = zeros(UInt8, 16)
+    iv = zeros(UInt8, 100)
+    @test AMCL.amcl_aes(AMCL.CTR16, key, iv) isa AMCL.amcl_aes
 end
 
-@testset "BLS_BLS381_SIGN" begin
-    rng = AMCL.csprng("insecure")
-    sk, pk = octet(AMCL.BGS_BLS381), octet(4*AMCL.BFS_BLS381)
-    @assert AMCL.BLS_BLS381_KEY_PAIR_GENERATE(rng, sk, pk) == AMCL.BLS_OK
-    msg, sig = octet("foo"), octet(AMCL.BFS_BLS381+1)
-    @test AMCL.BLS_BLS381_SIGN(sig, msg, sk) == AMCL.BLS_OK
+@testset "gcm memory alignment" begin
+    key = zeros(UInt8, 16)
+    iv = zeros(UInt8, 100)
+    @test AMCL.gcm(key, 12, iv) isa AMCL.gcm
 end
 
-@testset "BLS_BLS381_VERIFY" begin
-    rng = AMCL.csprng("insecure")
-    sk, pk = octet(AMCL.BGS_BLS381), octet(4*AMCL.BFS_BLS381)
-    @assert AMCL.BLS_BLS381_KEY_PAIR_GENERATE(rng, sk, pk) == AMCL.BLS_OK
-    msg, sig = octet("foo"), octet(AMCL.BFS_BLS381+1)
-    @assert AMCL.BLS_BLS381_SIGN(sig, msg, sk) == AMCL.BLS_OK
-    @test AMCL.BLS_BLS381_VERIFY(sig, msg, pk) == AMCL.BLS_OK
+@testset "sha3 memory alignment" begin
+    @test AMCL.sha3(AMCL.SHAKE256) isa AMCL.sha3
 end
 
-# @test "ECP_BLS381_generator" begin
-#     sk, pk = octet(AMCL.BGS_BLS381), octet(4*AMCL.BFS_BLS381)
-#     @test AMCL.BLS_BLS381_VERIFY(sig, msg, pk) == AMCL.BLS_OK
-# end
+@testset "hash512 memory alignment" begin
+    @test AMCL.hash256() isa AMCL.hash256
+end
+
+@testset "hash512 memory alignment" begin
+    @test AMCL.hash512() isa AMCL.hash512
+end

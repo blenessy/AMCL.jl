@@ -1,3 +1,5 @@
+using CBinding
+
 # Automatically generated using Clang.jl
 
 
@@ -60,46 +62,72 @@ const NK = 21
 const NJ = 6
 const NV = 8
 
-mutable struct hash256
-    length::NTuple{2, UInt32}
-    h::NTuple{8, UInt32}
-    w::NTuple{80, UInt32}
+@cstruct hash256 {
+    length::UInt32[2]
+    h::UInt32[8]
+    w::UInt32[80]
     hlen::Cint
+}
+function hash256()
+    h = hash256(undef)
+    HASH256_init(h)
+    return h
 end
 
-mutable struct hash512
-    length::NTuple{2, UInt64}
-    h::NTuple{8, UInt64}
-    w::NTuple{80, UInt64}
+@cstruct hash512 {
+    length::UInt64[2]
+    h::UInt64[8]
+    w::UInt64[80]
     hlen::Cint
+}
+function hash512()
+    h = hash512(undef)
+    HASH512_init(h)
+    return h
 end
 
 const hash384 = hash512
 
-mutable struct sha3
+@cstruct sha3 {
     length::UInt64
-    S::NTuple{5, NTuple{5, UInt64}}
+    S::UInt64[5][5]
     rate::Cint
     len::Cint
+}
+function sha3(type::Int)
+    s = sha3(undef)
+    SHA3_init(s, type)
+    return s
 end
 
-mutable struct amcl_aes
+@cstruct amcl_aes {
     Nk::Cint
     Nr::Cint
     mode::Cint
-    fkey::NTuple{60, UInt32}
-    rkey::NTuple{60, UInt32}
-    f::NTuple{16, UInt8}
+    fkey::UInt32[60]
+    rkey::UInt32[60]
+    f::UInt8[16]
+}
+function amcl_aes(mode, key, iv)
+    aes = amcl_aes(undef)
+    res = AES_init(aes, mode, length(key), pointer(key), pointer(iv))
+    res == 1 || error("failed to initialize amcl_aes struct ($res)")
+    return aes
 end
 
-struct gcm
-    table::NTuple{128, NTuple{4, UInt32}}
-    stateX::NTuple{16, Cuchar}
-    Y_0::NTuple{16, Cuchar}
-    lenA::NTuple{2, UInt32}
-    lenC::NTuple{2, UInt32}
+@cstruct gcm {
+    table::UInt32[128][4]
+    stateX::Cuchar[16]
+    Y_0::Cuchar[16]
+    lenA::UInt32[2]
+    lenC::UInt32[2]
     status::Cint
     a::amcl_aes
+}
+function gcm(key, n, iv)
+    g = gcm(undef)
+    GCM_init(g, length(key), pointer(key), n, pointer(iv))
+    return g
 end
 
 mutable struct octet{N}
@@ -119,18 +147,17 @@ mutable struct octet{N}
     end
 end
 
-mutable struct csprng
-    ira::NTuple{21, UInt32}
+@cstruct csprng {
+    ira::UInt32[21]
     rndptr::Cint
     borrow::UInt32
     pool_ptr::Cint
-    pool::NTuple{32, UInt8}
-    csprng(seed) = csprng(octet(seed))
-    function csprng(seed::octet)
-        rng = new()
-        CREATE_CSPRNG(rng, seed)
-        return rng
-    end
+    pool::UInt8[32]
+}
+function csprng(seed::octet)
+    rng = csprng(undef)
+    CREATE_CSPRNG(rng, seed)
+    return rng
 end
 
 const CHUNK = 64
@@ -700,389 +727,389 @@ const EFS_NUMS512W = MODBYTES_512_56
 const EGS_SECP256K1 = MODBYTES_256_56
 const EFS_SECP256K1 = MODBYTES_256_56
 
-struct FP_BLS381
-    g::BIG_384_58
+@cstruct FP_BLS381 {
+    g::Int64[div(sizeof(BIG_384_58),sizeof(Int64))]
     XES::Int32
-end
+}
 
-struct FP2_BLS381
+@cstruct FP2_BLS381 {
     a::FP_BLS381
     b::FP_BLS381
-end
+}
 
-struct ECP2_BLS381
+@cstruct ECP2_BLS381 {
     x::FP2_BLS381
     y::FP2_BLS381
     z::FP2_BLS381
-end
+}
 
-struct FP_BLS383
-    g::BIG_384_58
+@cstruct FP_BLS383 {
+    g::Int64[div(sizeof(BIG_384_58),sizeof(Int64))]
     XES::Int32
-end
+}
 
-struct FP2_BLS383
+@cstruct FP2_BLS383 {
     a::FP_BLS383
     b::FP_BLS383
-end
+}
 
-struct ECP2_BLS383
+@cstruct ECP2_BLS383 {
     x::FP2_BLS383
     y::FP2_BLS383
     z::FP2_BLS383
-end
+}
 
-struct FP_BLS461
-    g::BIG_464_60
+@cstruct FP_BLS461 {
+    g::Int64[div(sizeof(BIG_464_60),sizeof(Int64))]
     XES::Int32
-end
+}
 
-struct FP2_BLS461
+@cstruct FP2_BLS461 {
     a::FP_BLS461
     b::FP_BLS461
-end
+}
 
-struct ECP2_BLS461
+@cstruct ECP2_BLS461 {
     x::FP2_BLS461
     y::FP2_BLS461
     z::FP2_BLS461
-end
+}
 
-struct FP_BN254
-    g::BIG_256_56
+@cstruct FP_BN254 {
+    g::Int64[div(sizeof(BIG_256_56),sizeof(Int64))]
     XES::Int32
-end
+}
 
-struct FP2_BN254
+@cstruct FP2_BN254 {
     a::FP_BN254
     b::FP_BN254
-end
+}
 
-struct ECP2_BN254
+@cstruct ECP2_BN254 {
     x::FP2_BN254
     y::FP2_BN254
     z::FP2_BN254
-end
+}
 
-struct FP_BN254CX
-    g::BIG_256_56
+@cstruct FP_BN254CX {
+    g::Int64[div(sizeof(BIG_256_56),sizeof(Int64))]
     XES::Int32
-end
+}
 
-struct FP2_BN254CX
+@cstruct FP2_BN254CX {
     a::FP_BN254CX
     b::FP_BN254CX
-end
+}
 
-struct ECP2_BN254CX
+@cstruct ECP2_BN254CX {
     x::FP2_BN254CX
     y::FP2_BN254CX
     z::FP2_BN254CX
-end
+}
 
-struct FP_FP256BN
-    g::BIG_256_56
+@cstruct FP_FP256BN {
+    g::Int64[div(sizeof(BIG_256_56),sizeof(Int64))]
     XES::Int32
-end
+}
 
-struct FP2_FP256BN
+@cstruct FP2_FP256BN {
     a::FP_FP256BN
     b::FP_FP256BN
-end
+}
 
-struct ECP2_FP256BN
+@cstruct ECP2_FP256BN {
     x::FP2_FP256BN
     y::FP2_FP256BN
     z::FP2_FP256BN
-end
+}
 
-struct FP_FP512BN
-    g::BIG_512_60
+@cstruct FP_FP512BN {
+    g::Int64[div(sizeof(BIG_512_60),sizeof(Int64))]
     XES::Int32
-end
+}
 
-struct FP2_FP512BN
+@cstruct FP2_FP512BN {
     a::FP_FP512BN
     b::FP_FP512BN
-end
+}
 
-struct ECP2_FP512BN
+@cstruct ECP2_FP512BN {
     x::FP2_FP512BN
     y::FP2_FP512BN
     z::FP2_FP512BN
-end
+}
 
-struct FP_BLS24
-    g::BIG_480_56
+@cstruct FP_BLS24 {
+    g::Int64[div(sizeof(BIG_480_56),sizeof(Int64))]
     XES::Int32
-end
+}
 
-struct FP2_BLS24
+@cstruct FP2_BLS24 {
     a::FP_BLS24
     b::FP_BLS24
-end
+}
 
-struct FP4_BLS24
+@cstruct FP4_BLS24 {
     a::FP2_BLS24
     b::FP2_BLS24
-end
+}
 
-struct ECP4_BLS24
+@cstruct ECP4_BLS24 {
     x::FP4_BLS24
     y::FP4_BLS24
     z::FP4_BLS24
-end
+}
 
-struct FP_BLS48
-    g::BIG_560_58
+@cstruct FP_BLS48 {
+    g::Int64[div(sizeof(BIG_560_58),sizeof(Int64))]
     XES::Int32
-end
+}
 
-struct FP2_BLS48
+@cstruct FP2_BLS48 {
     a::FP_BLS48
     b::FP_BLS48
-end
+}
 
-struct FP4_BLS48
+@cstruct FP4_BLS48 {
     a::FP2_BLS48
     b::FP2_BLS48
-end
+}
 
-struct FP8_BLS48
+@cstruct FP8_BLS48 {
     a::FP4_BLS48
     b::FP4_BLS48
-end
+}
 
-struct ECP8_BLS48
+@cstruct ECP8_BLS48 {
     x::FP8_BLS48
     y::FP8_BLS48
     z::FP8_BLS48
-end
+}
 
-struct FP_ANSSI
-    g::BIG_256_56
+@cstruct FP_ANSSI {
+    g::Int64[div(sizeof(BIG_256_56),sizeof(Int64))]
     XES::Int32
-end
+}
 
-struct ECP_ANSSI
+@cstruct ECP_ANSSI {
     x::FP_ANSSI
     y::FP_ANSSI
     z::FP_ANSSI
-end
+}
 
-struct ECP_BLS24
+@cstruct ECP_BLS24 {
     x::FP_BLS24
     y::FP_BLS24
     z::FP_BLS24
-end
+}
 
-struct ECP_BLS381
+@cstruct ECP_BLS381 {
     x::FP_BLS381
     y::FP_BLS381
     z::FP_BLS381
-end
+}
 
-struct ECP_BLS383
+@cstruct ECP_BLS383 {
     x::FP_BLS383
     y::FP_BLS383
     z::FP_BLS383
-end
+}
 
-struct ECP_BLS461
+@cstruct ECP_BLS461 {
     x::FP_BLS461
     y::FP_BLS461
     z::FP_BLS461
-end
+}
 
-struct ECP_BLS48
+@cstruct ECP_BLS48 {
     x::FP_BLS48
     y::FP_BLS48
     z::FP_BLS48
-end
+}
 
-struct ECP_BN254
+@cstruct ECP_BN254 {
     x::FP_BN254
     y::FP_BN254
     z::FP_BN254
-end
+}
 
-struct ECP_BN254CX
+@cstruct ECP_BN254CX {
     x::FP_BN254CX
     y::FP_BN254CX
     z::FP_BN254CX
-end
+}
 
-struct FP_BRAINPOOL
-    g::BIG_256_56
+@cstruct FP_BRAINPOOL {
+    g::Int64[div(sizeof(BIG_256_56),sizeof(Int64))]
     XES::Int32
-end
+}
 
-struct ECP_BRAINPOOL
+@cstruct ECP_BRAINPOOL {
     x::FP_BRAINPOOL
     y::FP_BRAINPOOL
     z::FP_BRAINPOOL
-end
+}
 
-struct FP_25519
-    g::BIG_256_56
+@cstruct FP_25519 {
+    g::Int64[div(sizeof(BIG_256_56),sizeof(Int64))]
     XES::Int32
-end
+}
 
-struct ECP_C25519
+@cstruct ECP_C25519 {
     x::FP_25519
     z::FP_25519
-end
+}
 
-struct FP_C41417
-    g::BIG_416_60
+@cstruct FP_C41417 {
+    g::Int64[div(sizeof(BIG_416_60),sizeof(Int64))]
     XES::Int32
-end
+}
 
-struct ECP_C41417
+@cstruct ECP_C41417 {
     x::FP_C41417
     y::FP_C41417
     z::FP_C41417
-end
+}
 
-struct ECP_ED25519
+@cstruct ECP_ED25519 {
     x::FP_25519
     y::FP_25519
     z::FP_25519
-end
+}
 
-struct ECP_FP256BN
+@cstruct ECP_FP256BN {
     x::FP_FP256BN
     y::FP_FP256BN
     z::FP_FP256BN
-end
+}
 
-struct ECP_FP512BN
+@cstruct ECP_FP512BN {
     x::FP_FP512BN
     y::FP_FP512BN
     z::FP_FP512BN
-end
+}
 
-struct FP_GOLDILOCKS
-    g::BIG_448_58
+@cstruct FP_GOLDILOCKS {
+    g::Int64[div(sizeof(BIG_448_58),sizeof(Int64))]
     XES::Int32
-end
+}
 
-struct ECP_GOLDILOCKS
+@cstruct ECP_GOLDILOCKS {
     x::FP_GOLDILOCKS
     y::FP_GOLDILOCKS
     z::FP_GOLDILOCKS
-end
+}
 
-struct FP_HIFIVE
-    g::BIG_336_60
+@cstruct FP_HIFIVE {
+    g::Int64[div(sizeof(BIG_336_60),sizeof(Int64))]
     XES::Int32
-end
+}
 
-struct ECP_HIFIVE
+@cstruct ECP_HIFIVE {
     x::FP_HIFIVE
     y::FP_HIFIVE
     z::FP_HIFIVE
-end
+}
 
-struct FP_NIST256
-    g::BIG_256_56
+@cstruct FP_NIST256 {
+    g::Int64[div(sizeof(BIG_256_56),sizeof(Int64))]
     XES::Int32
-end
+}
 
-struct ECP_NIST256
+@cstruct ECP_NIST256 {
     x::FP_NIST256
     y::FP_NIST256
     z::FP_NIST256
-end
+}
 
-struct FP_NIST384
-    g::BIG_384_56
+@cstruct FP_NIST384 {
+    g::Int64[div(sizeof(BIG_384_56),sizeof(Int64))]
     XES::Int32
-end
+}
 
-struct ECP_NIST384
+@cstruct ECP_NIST384 {
     x::FP_NIST384
     y::FP_NIST384
     z::FP_NIST384
-end
+}
 
-struct FP_NIST521
-    g::BIG_528_60
+@cstruct FP_NIST521 {
+    g::Int64[div(sizeof(BIG_528_60),sizeof(Int64))]
     XES::Int32
-end
+}
 
-struct ECP_NIST521
+@cstruct ECP_NIST521 {
     x::FP_NIST521
     y::FP_NIST521
     z::FP_NIST521
-end
+}
 
-struct FP_256PME
-    g::BIG_256_56
+@cstruct FP_256PME {
+    g::Int64[div(sizeof(BIG_256_56),sizeof(Int64))]
     XES::Int32
-end
+}
 
-struct ECP_NUMS256E
+@cstruct ECP_NUMS256E {
     x::FP_256PME
     y::FP_256PME
     z::FP_256PME
-end
+}
 
-struct FP_256PMW
-    g::BIG_256_56
+@cstruct FP_256PMW {
+    g::Int64[div(sizeof(BIG_256_56),sizeof(Int64))]
     XES::Int32
-end
+}
 
-struct ECP_NUMS256W
+@cstruct ECP_NUMS256W {
     x::FP_256PMW
     y::FP_256PMW
     z::FP_256PMW
-end
+}
 
-struct FP_384PM
-    g::BIG_384_56
+@cstruct FP_384PM {
+    g::Int64[div(sizeof(BIG_384_56),sizeof(Int64))]
     XES::Int32
-end
+}
 
-struct ECP_NUMS384E
+@cstruct ECP_NUMS384E {
     x::FP_384PM
     y::FP_384PM
     z::FP_384PM
-end
+}
 
-struct ECP_NUMS384W
+@cstruct ECP_NUMS384W {
     x::FP_384PM
     y::FP_384PM
     z::FP_384PM
-end
+}
 
-struct FP_512PM
-    g::BIG_512_56
+@cstruct FP_512PM {
+    g::Int64[div(sizeof(BIG_512_56),sizeof(Int64))]
     XES::Int32
-end
+}
 
-struct ECP_NUMS512E
+@cstruct ECP_NUMS512E {
     x::FP_512PM
     y::FP_512PM
     z::FP_512PM
-end
+}
 
-struct ECP_NUMS512W
+@cstruct ECP_NUMS512W {
     x::FP_512PM
     y::FP_512PM
     z::FP_512PM
-end
+}
 
-struct FP_SECP256K1
-    g::BIG_256_56
+@cstruct FP_SECP256K1 {
+    g::Int64[div(sizeof(BIG_256_56),sizeof(Int64))]
     XES::Int32
-end
+}
 
-struct ECP_SECP256K1
+@cstruct ECP_SECP256K1 {
     x::FP_SECP256K1
     y::FP_SECP256K1
     z::FP_SECP256K1
-end
+}
 
 const HFLEN_2048 = FFLEN_2048 / 2
 const P_MBITS_2048 = MODBYTES_1024_58 * 8
@@ -1105,113 +1132,113 @@ const P_TBITS_4096 = P_MBITS_4096 % BASEBITS_512_60
 # Skipping MacroDefinition: P_EXCESS_4096 ( a ) ( ( ( a [ NLEN_512_60 - 1 ] ) >> ( P_TBITS_4096 ) ) + 1 )
 # Skipping MacroDefinition: P_FEXCESS_4096 ( ( chunk ) 1 << ( BASEBITS_512_60 * NLEN_512_60 - P_MBITS_4096 - 1 ) )
 
-struct FP4_BLS381
+@cstruct FP4_BLS381 {
     a::FP2_BLS381
     b::FP2_BLS381
-end
+}
 
-struct FP12_BLS381
+@cstruct FP12_BLS381 {
     a::FP4_BLS381
     b::FP4_BLS381
     c::FP4_BLS381
     type::Cint
-end
+}
 
-struct FP4_BLS383
+@cstruct FP4_BLS383 {
     a::FP2_BLS383
     b::FP2_BLS383
-end
+}
 
-struct FP12_BLS383
+@cstruct FP12_BLS383 {
     a::FP4_BLS383
     b::FP4_BLS383
     c::FP4_BLS383
     type::Cint
-end
+}
 
-struct FP4_BLS461
+@cstruct FP4_BLS461 {
     a::FP2_BLS461
     b::FP2_BLS461
-end
+}
 
-struct FP12_BLS461
+@cstruct FP12_BLS461 {
     a::FP4_BLS461
     b::FP4_BLS461
     c::FP4_BLS461
     type::Cint
-end
+}
 
-struct FP4_BN254
+@cstruct FP4_BN254 {
     a::FP2_BN254
     b::FP2_BN254
-end
+}
 
-struct FP12_BN254
+@cstruct FP12_BN254 {
     a::FP4_BN254
     b::FP4_BN254
     c::FP4_BN254
     type::Cint
-end
+}
 
-struct FP4_BN254CX
+@cstruct FP4_BN254CX {
     a::FP2_BN254CX
     b::FP2_BN254CX
-end
+}
 
-struct FP12_BN254CX
+@cstruct FP12_BN254CX {
     a::FP4_BN254CX
     b::FP4_BN254CX
     c::FP4_BN254CX
     type::Cint
-end
+}
 
-struct FP4_FP256BN
+@cstruct FP4_FP256BN {
     a::FP2_FP256BN
     b::FP2_FP256BN
-end
+}
 
-struct FP12_FP256BN
+@cstruct FP12_FP256BN {
     a::FP4_FP256BN
     b::FP4_FP256BN
     c::FP4_FP256BN
     type::Cint
-end
+}
 
-struct FP4_FP512BN
+@cstruct FP4_FP512BN {
     a::FP2_FP512BN
     b::FP2_FP512BN
-end
+}
 
-struct FP12_FP512BN
+@cstruct FP12_FP512BN {
     a::FP4_FP512BN
     b::FP4_FP512BN
     c::FP4_FP512BN
     type::Cint
-end
+}
 
-struct FP16_BLS48
+@cstruct FP16_BLS48 {
     a::FP8_BLS48
     b::FP8_BLS48
-end
+}
 
-struct FP8_BLS24
+@cstruct FP8_BLS24 {
     a::FP4_BLS24
     b::FP4_BLS24
-end
+}
 
-struct FP24_BLS24
+@cstruct FP24_BLS24 {
     a::FP8_BLS24
     b::FP8_BLS24
     c::FP8_BLS24
     type::Cint
-end
+}
 
-struct FP48_BLS48
+@cstruct FP48_BLS48 {
     a::FP16_BLS48
     b::FP16_BLS48
     c::FP16_BLS48
     type::Cint
-end
+}
 
 const MODBITS_25519 = MBITS_25519
 const TBITS_25519 = MBITS_25519 % BASEBITS_256_56
@@ -1412,49 +1439,55 @@ const TIME_SLOT_MINUTES = 1440
 const HASH_TYPE_RSA_2048 = SHA256
 const RFS_2048 = MODBYTES_1024_58 * FFLEN_2048
 
-struct rsa_public_key_2048
+mutable struct rsa_public_key_2048
     e::Int32
     n::NTuple{2, BIG_1024_58}
+    rsa_public_key_2048(::UndefInitializer) = new()
 end
 
-struct rsa_private_key_2048
+mutable struct rsa_private_key_2048
     p::NTuple{1, BIG_1024_58}
     q::NTuple{1, BIG_1024_58}
     dp::NTuple{1, BIG_1024_58}
     dq::NTuple{1, BIG_1024_58}
     c::NTuple{1, BIG_1024_58}
+    rsa_private_key_2048(::UndefInitializer) = new()
 end
 
 const HASH_TYPE_RSA_3072 = SHA256
 const RFS_3072 = MODBYTES_384_56 * FFLEN_3072
 
-struct rsa_public_key_3072
+mutable struct rsa_public_key_3072
     e::Int32
     n::NTuple{8, BIG_384_56}
+    rsa_public_key_3072(::UndefInitializer) = new()
 end
 
-struct rsa_private_key_3072
+mutable struct rsa_private_key_3072
     p::NTuple{4, BIG_384_56}
     q::NTuple{4, BIG_384_56}
     dp::NTuple{4, BIG_384_56}
     dq::NTuple{4, BIG_384_56}
     c::NTuple{4, BIG_384_56}
+    rsa_private_key_3072(::UndefInitializer) = new()
 end
 
 const HASH_TYPE_RSA_4096 = SHA256
 const RFS_4096 = MODBYTES_512_60 * FFLEN_4096
 
-struct rsa_public_key_4096
+mutable struct rsa_public_key_4096
     e::Int32
     n::NTuple{8, BIG_512_60}
+    rsa_public_key_4096(::UndefInitializer) = new()
 end
 
-struct rsa_private_key_4096
+mutable struct rsa_private_key_4096
     p::NTuple{4, BIG_512_60}
     q::NTuple{4, BIG_512_60}
     dp::NTuple{4, BIG_512_60}
     dq::NTuple{4, BIG_512_60}
     c::NTuple{4, BIG_512_60}
+    rsa_private_key_4096(::UndefInitializer) = new()
 end
 
 const MAX_RSA_BYTES = 512
@@ -1481,7 +1514,7 @@ const WCC_PFS_FP256BN = MODBYTES_256_56
 const WCC_PGS_FP512BN = MODBYTES_512_60
 const WCC_PFS_FP512BN = MODBYTES_512_60
 
-struct pktype
+mutable struct pktype
     type::Cint
     hash::Cint
     curve::Cint

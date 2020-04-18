@@ -18,9 +18,49 @@ end
 
 function libmap(include_path)
     lib = strip(splitext(basename(include_path))[1])
-    if lib in ("amcl", "utils", "version", "randapi")
+
+    # Core APIs
+    if lib in ("amcl", "utils", "version", "randapi", "ecdh_support", "pbc_support", "rsa_support")
         return "libamcl_core"
     end
+
+    # BLS24 and BLS48 specific
+    lib != "pair192_BLS24" || return "libamcl_pairing_BLS24"
+    lib != "bls192_BLS24" || return "libamcl_bls_BLS24"
+    lib != "wcc192_BLS24" || return "libamcl_wcc_BLS24"
+    lib != "mpin192_BLS24" || return "libamcl_mpin_BLS24"
+    lib != "pair256_BLS48" || return "libamcl_pairing_BLS48"
+    lib != "bls256_BLS48" || return "libamcl_bls_BLS48"
+    lib != "wcc256_BLS48" || return "libamcl_wcc_BLS48"
+    lib != "mpin192_BLS24" || return "libamcl_mpin_BLS48"
+
+    # Curve APIs
+    m = match(r"(?:ecdh_|ecp_|fp_)(.*)", lib)
+    isnothing(m) || return "libamcl_curve_$(m.captures[1])"
+
+    # Pairing APIs
+    m = match(r"(?:ecp\d+_|fp\d+_|pair_)(.*)", lib)
+    isnothing(m) || return "libamcl_pairing_$(m.captures[1])"
+
+    # RSA APIs
+    m = match(r"ff_(.*)", lib)
+    isnothing(m) || return "libamcl_rsa_$(m.captures[1])"
+
+    # big number APIs
+    lib != "big_256_56" || return "libamcl_curve_BN254"
+    lib != "big_336_60" || return "libamcl_curve_HIFIVE"
+    lib != "big_384_56" || return "libamcl_curve_NIST384"
+    lib != "big_384_58" || return "libamcl_curve_BLS381"
+    lib != "big_416_60" || return "libamcl_curve_C41417"
+    lib != "big_448_58" || return "libamcl_curve_GOLDILOCKS"
+    lib != "big_464_60" || return "libamcl_curve_BLS461"
+    lib != "big_480_56" || return "libamcl_curve_BLS24"
+    lib != "big_512_56" || return "libamcl_curve_NUMS512E"
+    lib != "big_512_60" || return "libamcl_rsa_4096"
+    lib != "big_528_60" || return "libamcl_curve_NIST521"
+    lib != "big_560_58" || return "libamcl_curve_BLS48"
+    lib != "big_1024_58" || return "libamcl_rsa_2048"
+
     return "libamcl_$lib"
 end
 

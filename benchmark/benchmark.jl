@@ -5,7 +5,7 @@ Pkg.activate(joinpath(@__DIR__, ".."))
 using BenchmarkTools
 using AMCL
 
-rng = AMCL.csprng("insecure")
+rng = AMCL.csprng(AMCL.octet("insecure"))
 msg = AMCL.octet("foo")
 
 println("== octet(::String) ==")

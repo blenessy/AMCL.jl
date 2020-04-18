@@ -4,20 +4,18 @@ Julia bindings for AMCL_jll
 
 # Status
 
-- [x] `octet` works
-- [x] `csprng` works
-- [x] `CREATE_CSPRNG`
-- [x] BLS functions (the `bls_*.h` API)
-- [x] `CREATE_CSPRNG`
+Everything should work although only a tiny subset of the native APIs have been tested.
+Only tested on Mac so far, but I'm not expecting problems on any other target.
 
-The rest is untested.
-
-## What does not work?
-
-* low-level functions that try to output to immutable structs should not work gracefull
-* `ecp*.h` and `fp*.h` cannot work as the underlying tower field elements are not mapped to single memory location.
+- [x] all native (C) APIs should be reachable
+- [x] optimised `octet` implementation
+- [ ] travis CI to build for all targets
+- [ ] generate examples for common use-cases
+- [ ] add useful operators (e.g. + for curve points)
+- [ ] add implicit conversions where useful
 
 # Getting Started
+
 
 ## Install Package
 
