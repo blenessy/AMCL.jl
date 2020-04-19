@@ -1,5 +1,7 @@
 # AMCL.jl
 
+[![Build Status](https://travis-ci.com/blenessy/AMCL.jl.svg?branch=master)](https://travis-ci.com/blenessy/AMCL.jl)
+
 Julia bindings for AMCL_jll
 
 # Status
@@ -9,7 +11,7 @@ Only tested on Mac so far, but I'm not expecting problems on any other target.
 
 - [x] all native (C) APIs should be reachable
 - [x] optimised `octet` implementation
-- [ ] travis CI to build for all targets
+- [x] travis CI to build for all targets
 - [ ] generate examples for common use-cases
 - [ ] add useful operators (e.g. + for curve points)
 - [ ] add implicit conversions where useful
