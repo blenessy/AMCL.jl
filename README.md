@@ -1,23 +1,26 @@
 # AMCL.jl
 
-[![Build Status](https://travis-ci.com/blenessy/AMCL.jl.svg?branch=master)](https://travis-ci.com/blenessy/AMCL.jl)
+Julia bindings for AMCL_jll.
 
-Julia bindings for AMCL_jll
+The objective of this project is to provide efficient and secure access to the
+[AMCL C library](https://github.com/apache/incubator-milagro-crypto-c) from Julia for all supported platforms (OS and CPU).
 
 # Status
+
+[![Build Status](https://travis-ci.com/blenessy/AMCL.jl.svg?branch=master)](https://travis-ci.com/blenessy/AMCL.jl)
 
 Everything should work although only a tiny subset of the native APIs have been tested.
 Only tested on Mac so far, but I'm not expecting problems on any other target.
 
 - [x] all native (C) APIs should be reachable
+- [x] support all Julia platforms
 - [x] optimised `octet` implementation
 - [x] travis CI to build for all targets
-- [ ] generate examples for common use-cases
-- [ ] add useful operators (e.g. + for curve points)
+- [ ] generate [examples](./example/) for common use-cases
+- [ ] add more syntactic sugar (e.g. + for curve points)
 - [ ] add implicit conversions where useful
 
 # Getting Started
-
 
 ## Install Package
 
@@ -26,30 +29,30 @@ using Pkg
 Pkg.add("https://github.com/blenessy/AMCL.jl")
 ```
 
-## BLS381 PoC
+## Examples
+
+Example | Showcase
+--- | --- 
+[bls381-sign-verify.jl](./example/bls381-sign-verify.jl) | <ol><li>generate BLS381 key pair</li><li>sign message</li><li>verify signature</li></ol>
+
+You can run an example (in this case [bls381-sign-verify.jl](./example/bls381-sign-verify.jl)) like this:
 
 ```julia
-using AMCL
-
-# create CSPRNG
-rng = AMCL.csprng("insecure")
-
-# generate key pair
-secret_key = AMCL.octet(AMCL.BGS_BN254)
-public_key = AMCL.octet(4 * AMCL.BFS_BN254)
-@assert AMCL.BLS_BLS381_KEY_PAIR_GENERATE(rng, secret_key, public_key) == AMCL.BLS_OK
-
-# sign message
-message = AMCL.octet("foo")
-signature = AMCL.octet(AMCL.BFS_BLS381 + 1)
-@assert AMCL.BLS_BLS381_SIGN(signature, message, secret_key) == AMCL.BLS_OK
-
-# verify message
-@assert AMCL.BLS_BLS381_VERIFY(signature, message, public_key) == AMCL.BLS_OK
+julia example/bls381-sign-verify.jl
 ```
 
-# Benchmarks
+## Benchmarks
+
+You can run the benchmarks like this:
 
 ```julia
 julia benchmark/benchmark.jl
 ```
+
+# Contibutions
+
+Are most welcome. However, please note the objective of this project.
+
+1. Pick something to improve from the list above
+1. Create PR
+1. Make sure Travis CI is happy

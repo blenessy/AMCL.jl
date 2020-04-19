@@ -24,3 +24,5 @@ matrix:
 
 script:
   - julia --project --check-bounds=yes -e 'import Pkg; Pkg.activate("."); Pkg.test()'
+  - for script in example/*; do julia $script; done
+  - for script in benchmark/*; do julia $script; done

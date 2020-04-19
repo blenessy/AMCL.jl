@@ -1,6 +1,7 @@
 using Pkg
 Pkg.add("BenchmarkTools")
 Pkg.activate(joinpath(@__DIR__, ".."))
+#Pkg.add("https://github.com/blenessy/AMCL.jl")
 
 using BenchmarkTools
 using AMCL
