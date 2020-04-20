@@ -1,7 +1,7 @@
 name = "AMCL"
 uuid = "77965072-693f-46ac-993e-134b582e13c3"
 authors = ["Zalan Blenessy <zalan.blenessy@gmail.com>"]
-version = "0.201.0"
+version = "0.201.1"
 
 [deps]
 AMCL_jll = "3d240a5b-71e6-5479-a1fd-1de0b877801d"

@@ -43,10 +43,18 @@ julia example/bls381-sign-verify.jl
 
 ## Benchmarks
 
-You can run the benchmarks like this:
+Check the [benchmarks](./benchmark/) directory.
+
+You can run a benchmarks with the BLS381 curve like this:
 
 ```julia
-julia benchmark/benchmark.jl
+julia benchmark/bls.jl
+```
+
+If you want to test with other curve(s):
+
+```julia
+julia benchmark/bls.jl BN254 BLS461
 ```
 
 # Contibutions
