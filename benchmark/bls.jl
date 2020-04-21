@@ -17,7 +17,8 @@ msg = AMCL.octet(ones(UInt8, 200)) # constant 200 byte message
 for c in curves
     println("== BLS_$(c)_KEY_PAIR_GENERATE ==")
     sk = AMCL.octet(eval(Meta.parse("AMCL.BGS_$(c)")))
-    pk = AMCL.octet(4 * eval(Meta.parse("AMCL.BFS_$(c)")))
+    # should fit BLS48
+    pk = AMCL.octet(16 * eval(Meta.parse("AMCL.BFS_$(c)")))
     api = eval(Meta.parse("AMCL.BLS_$(c)_KEY_PAIR_GENERATE"))
     @btime $api(rng, $sk, $pk)
 
