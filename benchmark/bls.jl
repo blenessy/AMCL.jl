@@ -6,10 +6,7 @@ Pkg.activate(joinpath(@__DIR__, ".."))
 using BenchmarkTools
 using AMCL
 
-curves = ["BLS381"]
-if !isempty(Base.ARGS)
-    curves = copy(Base.ARGS)
-end
+curves = isempty(Base.ARGS) ? ["BLS381"] : copy(Base.ARGS)
 
 rng = AMCL.csprng(AMCL.octet("insecure"))
 msg = AMCL.octet(ones(UInt8, 200)) # constant 200 byte message

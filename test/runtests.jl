@@ -3,6 +3,8 @@ using Test
 using AMCL
 using AMCL: octet
 
+const TEST_CURVES = ("BN254", "BN254CX", "BLS381", "BLS383", "BLS461", "FP256BN", "FP512BN", "BLS24", "BLS48")
+
 @testset "octet" begin
     # invalid args
     @test_throws ArgumentError octet(-1)
@@ -41,4 +43,44 @@ end
 
 @testset "hash512 memory alignment" begin
     @test AMCL.hash512() isa AMCL.hash512
+end
+
+@testset "BLS Signatures" begin
+
+    rng = AMCL.csprng(octet("insecure"))
+    msg = octet(ones(UInt8, 200)) # constant 200 byte message
+
+    for c in TEST_CURVES
+        println("BLS Signatures: $c")
+
+        # generate keys
+        sk1 = octet(eval(Meta.parse("AMCL.BGS_$(c)")))
+        sk2 = octet(eval(Meta.parse("AMCL.BGS_$(c)")))
+        pk1 = octet(16 * eval(Meta.parse("AMCL.BFS_$(c)"))) # should fit BLS48
+        pk2 = octet(16 * eval(Meta.parse("AMCL.BFS_$(c)"))) # should fit BLS48
+        api = eval(Meta.parse("AMCL.BLS_$(c)_KEY_PAIR_GENERATE"))
+        @test api(rng, sk1, pk1) == AMCL.BLS_OK
+        @assert api(rng, sk2, pk2) == AMCL.BLS_OK
+
+        # sign
+        sig1 = octet(eval(Meta.parse("AMCL.BFS_$(c)")) + 1)
+        sig2 = octet(eval(Meta.parse("AMCL.BFS_$(c)")) + 1)
+        api = eval(Meta.parse("AMCL.BLS_$(c)_SIGN"))
+        @test api(sig1, msg, sk1) == AMCL.BLS_OK
+        @assert api(sig2, msg, sk2) == AMCL.BLS_OK
+
+        # aggregate signatures
+        sig = octet(eval(Meta.parse("AMCL.BFS_$(c)")) + 1)
+        api = eval(Meta.parse("AMCL.BLS_$(c)_ADD_G1"))
+        @test api(sig1, sig2, sig) == AMCL.BLS_OK
+
+        # aggregate public keys
+        pk = octet(16 * eval(Meta.parse("AMCL.BFS_$(c)"))) # should fit BLS48
+        api = eval(Meta.parse("AMCL.BLS_$(c)_ADD_G2"))
+        @test api(pk1, pk2, pk) == AMCL.BLS_OK
+    
+        # verify aggregated signature
+        api = eval(Meta.parse("AMCL.BLS_$(c)_VERIFY"))
+        @test api(sig, msg, pk) == AMCL.BLS_OK
+    end
 end

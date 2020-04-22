@@ -57,6 +57,14 @@ If you want to test with other curve(s):
 julia benchmark/bls.jl BN254 BLS461
 ```
 
+## Tests
+
+Run tests with:
+
+```julia
+julia -e 'using Pkg; Pkg.activate("."); Pkg.test()'
+```
+
 # Contibutions
 
 Are most welcome. However, please note the objective of this project.
