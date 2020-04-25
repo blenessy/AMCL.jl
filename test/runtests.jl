@@ -4,6 +4,7 @@ using AMCL
 using AMCL: octet
 
 const TEST_CURVES = ("BN254", "BN254CX", "BLS381", "BLS383", "BLS461", "FP256BN", "FP512BN", "BLS24", "BLS48")
+const TEST_BIG = ("256_56", "336_60", "384_56", "384_58", "416_60", "448_58", "464_60", "480_56", "512_56", "512_60", "528_60", "560_58", "1024_58")
 
 @testset "octet" begin
     # invalid args
@@ -84,3 +85,27 @@ end
         @test api(sig, msg, pk) == AMCL.BLS_OK
     end
 end
+
+@testset "BIG and DBIG numbers" begin
+    for D in ("", "D") # BIG or DBIG
+        for t in TEST_BIG
+            d = lowercase(D)
+            a = eval(Meta.parse("AMCL.$(D)BIG_$(t)(undef)"))
+            eval(Meta.parse("AMCL.BIG_$(t)_$(d)zero"))(a) # will segfault if big is too small
+            @test all(iszero, a.data)
+            b = eval(Meta.parse("AMCL.$(D)BIG_$(t)(zero)"))
+            b.data[1] = 1
+            @test a != b
+            @test a < b
+        end
+    end
+end
+
+@testset "Base Field memory alignment" begin
+    for c in TEST_CURVES
+        fp = eval(Meta.parse("AMCL.FP_$(c)(undef)"))
+        eval(Meta.parse("AMCL.FP_$(c)_zero"))(fp) # will segfault if big is too small
+        @test all(iszero, fp.g)
+    end
+end
+

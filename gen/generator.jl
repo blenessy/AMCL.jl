@@ -74,4 +74,74 @@ wc = init(
     header_library = libmap,
 )
 
-run(wc, false)
+#run(wc, false)
+
+module AMCL
+    const int8_t = Int8
+    const int16_t = Int16
+    const int32_t = Int32
+    const int64_t = Int64
+    const uint8_t = UInt8
+    const uint16_t = UInt16
+    const uint32_t = UInt32
+    const uint64_t = UInt64
+    const NLEN_1024_58 = 1
+    const NLEN_256_56 = 1
+    const NLEN_336_60 = 1
+    const NLEN_384_56 = 1
+    const NLEN_384_58 = 1
+    const NLEN_416_60 = 1
+    const NLEN_448_58 = 1
+    const NLEN_464_60 = 1
+    const NLEN_480_56 = 1
+    const NLEN_512_56 = 1
+    const NLEN_512_60 = 1
+    const NLEN_528_60 = 1
+    const NLEN_560_58 = 1
+    include(joinpath(@__DIR__, "libamcl_common.jl"))
+end
+
+const BIG_TYPES = r"^BIG_\d+_\d+$"
+const DBIG_TYPES = r"^DBIG_\d+_\d+$"
+const FP_TYPES = r"^FP\d*_[A-Z0-9]+$"
+const ECP_TYPES = r"^ECP\d*_[A-Z0-9]+$"
+const RSA_TYPES = r"^rsa_(?:private|public)_key_\d+$"
+const OTHER_TYPES = r"^(?:hash256|hash512|sha3|csprng|gcm|amcl_aes|pktype|octet)$"
+const ALL_TYPES = (BIG_TYPES, DBIG_TYPES, FP_TYPES, ECP_TYPES, RSA_TYPES, OTHER_TYPES)
+
+mathches_any(s::String, patterns::Regex...) = mathches_any(s, patterns)
+mathches_any(s::String, patterns::NTuple{N,Regex}) where {N} = any(p->!isnothing(match(p, s)), patterns)
+
+open(joinpath(@__DIR__, "libamcl_base_methods.jl"), "w") do f
+    println(f, "# Automatically generated with generator.jl")
+    
+    for sym in names(AMCL, all=true)
+        T = getproperty(AMCL, sym)
+        T isa Type || continue
+        n = String(sym)
+
+        if mathches_any(n, ALL_TYPES)
+            # pointer(::T)
+            println(f, "Base.pointer(a::$n) = reinterpret(Ptr{$n}, pointer_from_objref(a))")
+            # unsafe_convert(::Type{Ptr{T}}, ::T)
+            println(f, "Base.unsafe_convert(::Type{Ptr{$n}}, a::$n) = pointer(a)")
+        else
+            @info "skipped: $n"
+            continue
+        end
+        if mathches_any(n, BIG_TYPES)
+            println(f, "Base.:(==)(a::$n, b::$n) = iszero($(n * "_comp")(a, b))")
+            println(f, "Base.isless(a::$n, b::$n) = isone(-$(n * "_comp")(a, b))")
+        end
+        if mathches_any(n, DBIG_TYPES)
+            println(f, "Base.:(==)(a::$n, b::$n) = iszero($(n[2:end] * "_dcomp")(a, b))")
+            println(f, "Base.isless(a::$n, b::$n) = isone(-$(n[2:end] * "_dcomp")(a, b))")
+        end        
+        if mathches_any(n, FP_TYPES, ECP_TYPES)
+            println(f, "Base.:(==)(a::$n, b::$n) = isone($(n * "_equals")(a, b))")
+        end
+        if mathches_any(n, r"octet")
+            println(f, "Base.:(==)(a::octet, b::octet) = isone(AMCL.OCT_comp(a, b))")
+        end
+    end    
+end

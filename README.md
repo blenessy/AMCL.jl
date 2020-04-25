@@ -18,7 +18,7 @@ Only tested on Mac so far, but I'm not expecting problems on any other target.
 - [x] travis CI to build for all targets
 - [ ] generate [examples](./example/) for common use-cases
 - [ ] add more syntactic sugar (e.g. + for curve points)
-- [ ] add implicit conversions where useful
+- [x] add implicit conversions where useful
 
 # Getting Started
 
