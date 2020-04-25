@@ -89,8 +89,7 @@ end
     for D in ("", "D") # BIG or DBIG
         for t in TEST_BIG
             d = lowercase(D)
-            a = eval(Meta.parse("AMCL.$(D)BIG_$(t)(undef)"))
-            eval(Meta.parse("AMCL.BIG_$(t)_$(d)zero"))(a) # will segfault if big is too small
+            a = eval(Meta.parse("AMCL.$(D)BIG_$(t)()"))
             @test all(iszero, a.data)
             b = eval(Meta.parse("AMCL.$(D)BIG_$(t)(zero)"))
             b.data[1] = 1
@@ -100,11 +99,16 @@ end
     end
 end
 
-@testset "Base Field memory alignment" begin
+@testset "Fields (FPx)" begin
     for c in TEST_CURVES
-        fp = eval(Meta.parse("AMCL.FP_$(c)(undef)"))
-        eval(Meta.parse("AMCL.FP_$(c)_zero"))(fp) # will segfault if big is too small
+        fp = eval(Meta.parse("AMCL.FP_$(c)()"))
         @test all(iszero, fp.g)
     end
 end
 
+@testset "Elliptic Curve Points (ECPx)" begin
+    for c in TEST_CURVES
+        expr = Meta.parse("AMCL.ECP_$(c)_isinf(AMCL.ECP_$(c)())")
+        @test isone(eval(expr))
+    end
+end
