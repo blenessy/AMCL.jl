@@ -33,12 +33,12 @@ Pkg.add("https://github.com/blenessy/AMCL.jl")
 
 Example | Showcase
 --- | --- 
-[bls381-sign-verify.jl](./example/bls381-sign-verify.jl) | <ol><li>generate BLS381 key pair</li><li>sign message</li><li>verify signature</li></ol>
+[bls381_sign_verify.jl](./example/bls381_sign_verify.jl) | <ol><li>generate BLS381 key pair</li><li>sign message</li><li>verify signature</li></ol>
 
-You can run an example (in this case [bls381-sign-verify.jl](./example/bls381-sign-verify.jl)) like this:
+You can run an example (in this case [bls381_sign_verify.jl](./example/bls381_sign_verify.jl)) like this:
 
 ```julia
-julia example/bls381-sign-verify.jl
+julia example/bls381_sign_verify.jl
 ```
 
 ## Benchmarks

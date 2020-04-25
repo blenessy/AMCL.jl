@@ -41,6 +41,7 @@ module AMCL
 
     # equality
     Base.:(==)(a::ECP_BLS381, b::ECP_BLS381) = isone(AMCL.ECP_BLS381_equals(a, b))
+    Base.:(==)(a::octet, b::octet) = isone(AMCL.OCT_comp(a, b))
 
     function __init__()
         # validate assumtions
