@@ -1,4 +1,5 @@
 using CBinding
+using Random: RandomDevice
 
 # Automatically generated using Clang.jl
 
@@ -133,7 +134,7 @@ end
 mutable struct octet{N}
     len::Cint
     max::Cint
-    val::Cstring
+    val::Ptr{UInt8}
     data::NTuple{N, UInt8}
     octet(n::Int) = octet(zeros(UInt8, n))
     function octet(data)
@@ -158,6 +159,18 @@ function csprng(seed::octet)
     rng = csprng(undef)
     CREATE_CSPRNG(rng, seed)
     return rng
+end
+function csprng()
+    rng = RandomDevice()
+    try # this will not work on Windows
+        rng = RandomDevice(unlimited=false)
+        @debug "reading seed from /dev/random (this might block for a while) ..."
+    catch e
+        e isa MethodError || rethrow(e)
+    end
+    seed = rand(rng, UInt8, 32) # 256-bit seed
+    @debug "got seed from OS"
+    return csprng(octet(seed))
 end
 
 const CHUNK = 64

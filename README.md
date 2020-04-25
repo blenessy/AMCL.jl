@@ -65,6 +65,17 @@ Run tests with:
 julia -e 'using Pkg; Pkg.activate("."); Pkg.test()'
 ```
 
+# Frequently Asked Questions
+
+## My Application hangs for a while when using this lib
+
+If you are using the `csprng()` method, it will generate random seed from `/dev/random`,
+which will "hang" by design if there is not enough entropy in the pool.
+
+Try re-running your app with the `JULIA_DEBUG=AMCL` environment variable and look for
+the `got seed from OS` console log to confirm that your application is **not**
+stuck waiting for more entropy.
+
 # Contibutions
 
 Are most welcome. However, please note the objective of this project.

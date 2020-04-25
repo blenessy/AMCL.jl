@@ -18,8 +18,8 @@ const TEST_BIG = ("256_56", "336_60", "384_56", "384_58", "416_60", "448_58", "4
     @test octet([1]).len == sizeof(Int) && octet([1]).max == sizeof(Int) && octet([1]).val != C_NULL && reduce(|, octet([1]).data) == 0x1
 end
 
-@testset "csprng memory alignment" begin
-    @test AMCL.csprng(octet("insecure")) isa AMCL.csprng
+@testset "csprng" begin
+    @test AMCL.csprng() isa AMCL.csprng
 end
 
 @testset "amcl_aes memory alignment" begin
@@ -47,7 +47,6 @@ end
 end
 
 @testset "BLS Signatures" begin
-
     rng = AMCL.csprng(octet("insecure"))
     msg = octet(ones(UInt8, 200)) # constant 200 byte message
 
