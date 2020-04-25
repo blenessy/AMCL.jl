@@ -185,8 +185,8 @@ const HBITS_1024_58 = BASEBITS_1024_58 / 2
 
 # Skipping MacroDefinition: HMASK_1024_58 ( ( ( chunk ) 1 << HBITS_1024_58 ) - 1 )
 
-const BIG_1024_58 = NTuple{18, Int64}
-const DBIG_1024_58 = NTuple{36, Int64}
+@cstruct BIG_1024_58 { data::Int64[18] }
+@cstruct DBIG_1024_58 { data::Int64[36] }
 const MODBYTES_256_56 = 32
 const BIGBITS_256_56 = 8MODBYTES_256_56
 
@@ -203,8 +203,8 @@ const HBITS_256_56 = BASEBITS_256_56 / 2
 
 # Skipping MacroDefinition: HMASK_256_56 ( ( ( chunk ) 1 << HBITS_256_56 ) - 1 )
 
-const BIG_256_56 = NTuple{5, Int64}
-const DBIG_256_56 = NTuple{10, Int64}
+@cstruct BIG_256_56 { data::Int64[5] }
+@cstruct DBIG_256_56 { data::Int64[10] }
 const MODBYTES_336_60 = 42
 const BIGBITS_336_60 = 8MODBYTES_336_60
 
@@ -221,8 +221,8 @@ const HBITS_336_60 = BASEBITS_336_60 / 2
 
 # Skipping MacroDefinition: HMASK_336_60 ( ( ( chunk ) 1 << HBITS_336_60 ) - 1 )
 
-const BIG_336_60 = NTuple{6, Int64}
-const DBIG_336_60 = NTuple{12, Int64}
+@cstruct BIG_336_60 { data::Int64[6] }
+@cstruct DBIG_336_60 { data::Int64[12] }
 const MODBYTES_384_56 = 48
 const BIGBITS_384_56 = 8MODBYTES_384_56
 
@@ -239,8 +239,8 @@ const HBITS_384_56 = BASEBITS_384_56 / 2
 
 # Skipping MacroDefinition: HMASK_384_56 ( ( ( chunk ) 1 << HBITS_384_56 ) - 1 )
 
-const BIG_384_56 = NTuple{7, Int64}
-const DBIG_384_56 = NTuple{14, Int64}
+@cstruct BIG_384_56 { data::Int64[7] }
+@cstruct DBIG_384_56 { data::Int64[14] }
 const MODBYTES_384_58 = 48
 const BIGBITS_384_58 = 8MODBYTES_384_58
 
@@ -257,8 +257,8 @@ const HBITS_384_58 = BASEBITS_384_58 / 2
 
 # Skipping MacroDefinition: HMASK_384_58 ( ( ( chunk ) 1 << HBITS_384_58 ) - 1 )
 
-const BIG_384_58 = NTuple{7, Int64}
-const DBIG_384_58 = NTuple{14, Int64}
+@cstruct BIG_384_58 { data::Int64[7] }
+@cstruct DBIG_384_58 { data::Int64[14] }
 const MODBYTES_416_60 = 52
 const BIGBITS_416_60 = 8MODBYTES_416_60
 
@@ -275,8 +275,8 @@ const HBITS_416_60 = BASEBITS_416_60 / 2
 
 # Skipping MacroDefinition: HMASK_416_60 ( ( ( chunk ) 1 << HBITS_416_60 ) - 1 )
 
-const BIG_416_60 = NTuple{7, Int64}
-const DBIG_416_60 = NTuple{14, Int64}
+@cstruct BIG_416_60 { data::Int64[7] }
+@cstruct DBIG_416_60 { data::Int64[14] }
 const MODBYTES_448_58 = 56
 const BIGBITS_448_58 = 8MODBYTES_448_58
 
@@ -293,8 +293,8 @@ const HBITS_448_58 = BASEBITS_448_58 / 2
 
 # Skipping MacroDefinition: HMASK_448_58 ( ( ( chunk ) 1 << HBITS_448_58 ) - 1 )
 
-const BIG_448_58 = NTuple{8, Int64}
-const DBIG_448_58 = NTuple{16, Int64}
+@cstruct BIG_448_58 { data::Int64[8] }
+@cstruct DBIG_448_58 { data::Int64[16] }
 const MODBYTES_464_60 = 58
 const BIGBITS_464_60 = 8MODBYTES_464_60
 
@@ -311,8 +311,8 @@ const HBITS_464_60 = BASEBITS_464_60 / 2
 
 # Skipping MacroDefinition: HMASK_464_60 ( ( ( chunk ) 1 << HBITS_464_60 ) - 1 )
 
-const BIG_464_60 = NTuple{8, Int64}
-const DBIG_464_60 = NTuple{16, Int64}
+@cstruct BIG_464_60 { data::Int64[8] }
+@cstruct DBIG_464_60 { data::Int64[16] }
 const MODBYTES_480_56 = 60
 const BIGBITS_480_56 = 8MODBYTES_480_56
 
@@ -329,8 +329,8 @@ const HBITS_480_56 = BASEBITS_480_56 / 2
 
 # Skipping MacroDefinition: HMASK_480_56 ( ( ( chunk ) 1 << HBITS_480_56 ) - 1 )
 
-const BIG_480_56 = NTuple{9, Int64}
-const DBIG_480_56 = NTuple{18, Int64}
+@cstruct BIG_480_56 { data::Int64[9] }
+@cstruct DBIG_480_56 { data::Int64[18] }
 const MODBYTES_512_56 = 64
 const BIGBITS_512_56 = 8MODBYTES_512_56
 
@@ -347,8 +347,8 @@ const HBITS_512_56 = BASEBITS_512_56 / 2
 
 # Skipping MacroDefinition: HMASK_512_56 ( ( ( chunk ) 1 << HBITS_512_56 ) - 1 )
 
-const BIG_512_56 = NTuple{10, Int64}
-const DBIG_512_56 = NTuple{20, Int64}
+@cstruct BIG_512_56 { data::Int64[10] }
+@cstruct DBIG_512_56 { data::Int64[20] }
 const MODBYTES_512_60 = 64
 const BIGBITS_512_60 = 8MODBYTES_512_60
 
@@ -365,8 +365,8 @@ const HBITS_512_60 = BASEBITS_512_60 / 2
 
 # Skipping MacroDefinition: HMASK_512_60 ( ( ( chunk ) 1 << HBITS_512_60 ) - 1 )
 
-const BIG_512_60 = NTuple{9, Int64}
-const DBIG_512_60 = NTuple{18, Int64}
+@cstruct BIG_512_60 { data::Int64[9] }
+@cstruct DBIG_512_60 { data::Int64[18] }
 const MODBYTES_528_60 = 66
 const BIGBITS_528_60 = 8MODBYTES_528_60
 
@@ -383,8 +383,8 @@ const HBITS_528_60 = BASEBITS_528_60 / 2
 
 # Skipping MacroDefinition: HMASK_528_60 ( ( ( chunk ) 1 << HBITS_528_60 ) - 1 )
 
-const BIG_528_60 = NTuple{9, Int64}
-const DBIG_528_60 = NTuple{18, Int64}
+@cstruct BIG_528_60 { data::Int64[9] }
+@cstruct DBIG_528_60 { data::Int64[18] }
 const MODBYTES_560_58 = 70
 const BIGBITS_560_58 = 8MODBYTES_560_58
 
@@ -401,8 +401,8 @@ const HBITS_560_58 = BASEBITS_560_58 / 2
 
 # Skipping MacroDefinition: HMASK_560_58 ( ( ( chunk ) 1 << HBITS_560_58 ) - 1 )
 
-const BIG_560_58 = NTuple{10, Int64}
-const DBIG_560_58 = NTuple{20, Int64}
+@cstruct BIG_560_58 { data::Int64[10] }
+@cstruct DBIG_560_58 { data::Int64[20] }
 const BGS_BLS24 = MODBYTES_480_56
 const BFS_BLS24 = MODBYTES_480_56
 const BLS_OK = 0
@@ -1439,56 +1439,50 @@ const TIME_SLOT_MINUTES = 1440
 const HASH_TYPE_RSA_2048 = SHA256
 const RFS_2048 = MODBYTES_1024_58 * FFLEN_2048
 
-mutable struct rsa_public_key_2048
+@cstruct rsa_public_key_2048 {
     e::Int32
-    n::NTuple{2, BIG_1024_58}
-    rsa_public_key_2048(::UndefInitializer) = new()
-end
+    n::BIG_1024_58[2]
+}
 
-mutable struct rsa_private_key_2048
-    p::NTuple{1, BIG_1024_58}
-    q::NTuple{1, BIG_1024_58}
-    dp::NTuple{1, BIG_1024_58}
-    dq::NTuple{1, BIG_1024_58}
-    c::NTuple{1, BIG_1024_58}
-    rsa_private_key_2048(::UndefInitializer) = new()
-end
+@cstruct rsa_private_key_2048 {
+    p::BIG_1024_58[1]
+    q::BIG_1024_58[1]
+    dp::BIG_1024_58[1]
+    dq::BIG_1024_58[1]
+    c::BIG_1024_58[1]
+}
 
 const HASH_TYPE_RSA_3072 = SHA256
 const RFS_3072 = MODBYTES_384_56 * FFLEN_3072
 
-mutable struct rsa_public_key_3072
+@cstruct rsa_public_key_3072 {
     e::Int32
-    n::NTuple{8, BIG_384_56}
-    rsa_public_key_3072(::UndefInitializer) = new()
-end
+    n::BIG_384_56[8]
+}
 
-mutable struct rsa_private_key_3072
-    p::NTuple{4, BIG_384_56}
-    q::NTuple{4, BIG_384_56}
-    dp::NTuple{4, BIG_384_56}
-    dq::NTuple{4, BIG_384_56}
-    c::NTuple{4, BIG_384_56}
-    rsa_private_key_3072(::UndefInitializer) = new()
-end
+@cstruct rsa_private_key_3072 {
+    p::BIG_384_56[4]
+    q::BIG_384_56[4]
+    dp::BIG_384_56[4]
+    dq::BIG_384_56[4]
+    c::BIG_384_56[4]
+}
 
 const HASH_TYPE_RSA_4096 = SHA256
 const RFS_4096 = MODBYTES_512_60 * FFLEN_4096
 
-mutable struct rsa_public_key_4096
+@cstruct rsa_public_key_4096 {
     e::Int32
-    n::NTuple{8, BIG_512_60}
-    rsa_public_key_4096(::UndefInitializer) = new()
-end
+    n::BIG_512_60[8]
+}
 
-mutable struct rsa_private_key_4096
-    p::NTuple{4, BIG_512_60}
-    q::NTuple{4, BIG_512_60}
-    dp::NTuple{4, BIG_512_60}
-    dq::NTuple{4, BIG_512_60}
-    c::NTuple{4, BIG_512_60}
-    rsa_private_key_4096(::UndefInitializer) = new()
-end
+@cstruct rsa_private_key_4096 {
+    p::BIG_512_60[4]
+    q::BIG_512_60[4]
+    dp::BIG_512_60[4]
+    dq::BIG_512_60[4]
+    c::BIG_512_60[4]
+}
 
 const MAX_RSA_BYTES = 512
 const WCC_PGS_BLS24 = MODBYTES_480_56
@@ -1514,8 +1508,9 @@ const WCC_PFS_FP256BN = MODBYTES_256_56
 const WCC_PGS_FP512BN = MODBYTES_512_60
 const WCC_PFS_FP512BN = MODBYTES_512_60
 
-mutable struct pktype
+@cstruct pktype {
     type::Cint
     hash::Cint
     curve::Cint
-end
+}
+
