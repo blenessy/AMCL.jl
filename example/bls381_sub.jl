@@ -9,7 +9,7 @@ using Pkg
 Pkg.activate(joinpath(@__DIR__, ".."))
 #Pkg.add("https://github.com/blenessy/AMCL.jl")
 
-using AMCL
+using MilagroCrypto
 
 function BLS_BLS381_SUB_G1(R1,R2,R)
     P, T = AMCL.ECP_BLS381(undef), AMCL.ECP_BLS381(undef)
@@ -23,16 +23,16 @@ end
 # get a valid point and serialize it so we have something to test with
 P = AMCL.ECP_BLS381(undef)
 AMCL.ECP_BLS381_generator(P)
-p = AMCL.octet(AMCL.BFS_BLS381 + 1) # compressed format
+p = octet(AMCL.BFS_BLS381 + 1) # compressed format
 AMCL.ECP_BLS381_toOctet(p, P, true)
 
 # p2 = p + p
-p2 = AMCL.octet(AMCL.BFS_BLS381 + 1) # compressed format
+p2 = octet(AMCL.BFS_BLS381 + 1) # compressed format
 AMCL.BLS_BLS381_ADD_G1(p, p, p2) == AMCL.BLS_OK ||
     error("aggregation failed")
 
 # q = p2 - p = p
-q = AMCL.octet(AMCL.BFS_BLS381 + 1) # compressed format
+q = octet(AMCL.BFS_BLS381 + 1) # compressed format
 BLS_BLS381_SUB_G1(p2, p, q) == AMCL.BLS_OK ||
    error("failed to subtract")
 @assert p == q "BLS_BLS381_SUB_G1 does not work :("

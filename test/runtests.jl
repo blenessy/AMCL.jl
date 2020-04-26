@@ -1,7 +1,6 @@
 using Test
 
-using AMCL
-using AMCL: octet
+using MilagroCrypto
 
 const TEST_CURVES = ("BN254", "BN254CX", "BLS381", "BLS383", "BLS461", "FP256BN", "FP512BN", "BLS24", "BLS48")
 const TEST_BIG = ("256_56", "336_60", "384_56", "384_58", "416_60", "448_58", "464_60", "480_56", "512_56", "512_60", "528_60", "560_58", "1024_58")
@@ -19,7 +18,7 @@ const TEST_BIG = ("256_56", "336_60", "384_56", "384_58", "416_60", "448_58", "4
 end
 
 @testset "csprng" begin
-    @test AMCL.csprng() isa AMCL.csprng
+    @test csprng() isa csprng
 end
 
 @testset "amcl_aes memory alignment" begin
@@ -47,7 +46,7 @@ end
 end
 
 @testset "BLS Signatures" begin
-    rng = AMCL.csprng(octet("insecure"))
+    rng = csprng(octet("insecure"))
     msg = octet(ones(UInt8, 200)) # constant 200 byte message
 
     for c in TEST_CURVES

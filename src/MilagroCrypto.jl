@@ -1,4 +1,7 @@
-module AMCL
+module MilagroCrypto
+
+    # Alternate name of the module
+    const AMCL = @__MODULE__
 
     using AMCL_jll
 
@@ -25,4 +28,7 @@ module AMCL
         # validate assumtions
         @assert fieldname(octet, 4) == :data
     end
+
+    # exports
+    export AMCL, csprng, octet
 end # module
