@@ -16,8 +16,8 @@ Only tested on Mac so far, but I'm not expecting problems on any other target.
 - [x] support all Julia platforms
 - [x] optimised `octet` implementation
 - [x] travis CI to build for all targets
-- [ ] generate [examples](./example/) for common use-cases
-- [ ] add more syntactic sugar (e.g. + for curve points)
+- [ ] add more [examples](./example/) for common use-cases
+- [ ] usability improvement (e.g. add a + method for curve points)
 - [x] add implicit conversions where useful
 
 # Getting Started
@@ -26,7 +26,7 @@ Only tested on Mac so far, but I'm not expecting problems on any other target.
 
 ```julia
 using Pkg
-Pkg.add("https://github.com/blenessy/AMCL.jl")
+Pkg.add("MilagroCrypto")
 ```
 
 ## Examples
@@ -34,6 +34,7 @@ Pkg.add("https://github.com/blenessy/AMCL.jl")
 Example | Showcase
 --- | --- 
 [bls381_sign_verify.jl](./example/bls381_sign_verify.jl) | <ol><li>generate BLS381 key pair</li><li>sign message</li><li>verify signature</li></ol>
+[bls381_sub.jl](./example/bls381_sub.jl) | Implement missing `BLS_BLS381_SUB_G1` function with Curve primitives
 
 You can run an example (in this case [bls381_sign_verify.jl](./example/bls381_sign_verify.jl)) like this:
 
