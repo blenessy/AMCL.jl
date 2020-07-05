@@ -1,4 +1,4 @@
-# AMCL.jl
+# MilagroCrypto.jl
 
 Julia bindings for AMCL_jll.
 
@@ -7,7 +7,7 @@ The objective of this project is to provide efficient and secure access to the
 
 # Status
 
-[![Build Status](https://travis-ci.com/blenessy/AMCL.jl.svg?branch=master)](https://travis-ci.com/blenessy/AMCL.jl)
+[![Build Status](https://travis-ci.com/blenessy/MilagroCrypto.jl.svg?branch=master)](https://travis-ci.com/blenessy/MilagroCrypto.jl)
 
 Everything should work although only a tiny subset of the native APIs have been tested.
 Only tested on Mac so far, but I'm not expecting problems on any other target.
@@ -73,7 +73,7 @@ julia -e 'using Pkg; Pkg.activate("."); Pkg.test()'
 If you are using the `csprng()` method, it will generate random seed from `/dev/random`,
 which will "hang" by design if there is not enough entropy in the pool.
 
-Try re-running your app with the `JULIA_DEBUG=AMCL` environment variable and look for
+Try re-running your app with the `JULIA_DEBUG=MilagroCrypto` environment variable and look for
 the `got seed from OS` console log to confirm that your application is **not**
 stuck waiting for more entropy.
 
